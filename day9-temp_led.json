@@ -1,0 +1,235 @@
+[
+    {
+        "id": "e93de9b5.c748c8",
+        "type": "tab",
+        "label": "temp_led",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "aaaa5e12.d89fe",
+        "type": "i2c in",
+        "z": "e93de9b5.c748c8",
+        "name": "",
+        "address": "72",
+        "command": "1",
+        "count": "4",
+        "x": 270,
+        "y": 280,
+        "wires": [
+            [
+                "4d20a8b7.723938"
+            ]
+        ],
+        "icon": "node-red-contrib-brads-i2c-nodes/chip.png"
+    },
+    {
+        "id": "413ca4d5.b62b1c",
+        "type": "debug",
+        "z": "e93de9b5.c748c8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 650,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "2f5281cf.83f00e",
+        "type": "inject",
+        "z": "e93de9b5.c748c8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "num",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 150,
+        "y": 280,
+        "wires": [
+            [
+                "aaaa5e12.d89fe"
+            ]
+        ]
+    },
+    {
+        "id": "4d20a8b7.723938",
+        "type": "function",
+        "z": "e93de9b5.c748c8",
+        "name": "calculate temp",
+        "func": "a1 = parseInt(msg[\"payload\"][0]);\na4 = parseInt(msg[\"payload\"][3]);\nmsg[\"payload\"] = parseFloat(a1+256*a4)/16/8;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 420,
+        "y": 280,
+        "wires": [
+            [
+                "413ca4d5.b62b1c",
+                "e21e136c.df5ed",
+                "f25766c1.f7b468",
+                "9512de9e.6c02c"
+            ]
+        ]
+    },
+    {
+        "id": "e21e136c.df5ed",
+        "type": "ui_chart",
+        "z": "e93de9b5.c748c8",
+        "name": "",
+        "group": "4951d7b7.554708",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 590,
+        "y": 120,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "f25766c1.f7b468",
+        "type": "switch",
+        "z": "e93de9b5.c748c8",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "30",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 590,
+        "y": 340,
+        "wires": [
+            [
+                "ddf0f69c.8d2dd8",
+                "4fed20ce.9d076"
+            ]
+        ]
+    },
+    {
+        "id": "ddf0f69c.8d2dd8",
+        "type": "debug",
+        "z": "e93de9b5.c748c8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 750,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "9512de9e.6c02c",
+        "type": "rpi-gpio out",
+        "z": "e93de9b5.c748c8",
+        "name": "pwn light",
+        "pin": "33",
+ 
+ "set": "",
+        "level": "0",
+        "freq": "100",
+        "out": "pwm",
+        "x": 620,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "d5daf845.268a98",
+        "type": "Slack Bot Out",
+        "z": "e93de9b5.c748c8",
+        "name": "slack受信",
+        "apiToken": "xxxxxxxxxxxxxxxxxxx",
+        "channel": "node-red-test",
+        "x": 900,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "90c58359.46683",
+        "type": "debug",
+        "z": "e93de9b5.c748c8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 950,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4fed20ce.9d076",
+        "type": "function",
+        "z": "e93de9b5.c748c8",
+        "name": "create message",
+        "func": "msg.payload += \"℃ 熱中症注意！！！！\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 280,
+        "wires": [
+            [
+                "90c58359.46683",
+                "d5daf845.268a98"
+            ]
+        ]
+    },
+    {
+        "id": "4951d7b7.554708",
+        "type": "ui_group",
+        "z": "",
+        "name": "デフォルト",
+        "tab": "6483c17f.b55c8",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "6483c17f.b55c8",
+        "type": "ui_tab",
+        "z": "",
+        "name": "ホーム",
+        "icon": "dashboard"
+    }
+ ]
